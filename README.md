@@ -1,6 +1,6 @@
 # drone-mobile
 
-An unoffcial nodejs API wrapper for Drone Mobile
+An unofficial nodejs API wrapper for DroneMobile
 
 [![CI](https://img.shields.io/github/workflow/status/Hacksore/drone-mobile/npm)](https://github.com/Hacksore/drone-mobile/actions?query=workflow%3Anpm)
 [![npm](https://img.shields.io/npm/v/drone-mobile.svg)](https://www.npmjs.com/package/drone-mobile)
