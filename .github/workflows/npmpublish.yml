@@ -8,6 +8,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    if: "!contains(toJSON(github.event.commits.*.message), '[skip-publish]')"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -16,7 +17,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm checkout-version
-      - run: npm publish
-        if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+      - run: npm publish        
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
