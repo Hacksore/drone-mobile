@@ -1,0 +1,9 @@
+.env
+node_modules/
+.DS_Store
+.rpt2_cache
+dist/
+config*.json
+.vs/
+.vscode/
+coverage/

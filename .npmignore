@@ -1,0 +1,14 @@
+src/
+config*.json
+.github/
+.env
+.DS_Store
+.rpt2_cache
+test.js
+.eslintrc.js
+.editorconfig
+babel.config.js
+tsconfig.json
+jest.config.js
+.prettierrc
+rollup.config.js
