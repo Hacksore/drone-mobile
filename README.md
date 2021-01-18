@@ -45,4 +45,4 @@ client.on('ready', async () => {
 - [x] Start
 - [x] Lock
 - [x] Unlock
-- [ ] Status
+- [x] Status

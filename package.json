@@ -1,6 +1,6 @@
 {
   "name": "drone-mobile",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,6 +8,7 @@
     "build": "rollup -c rollup.config.js",
     "dev": "rollup -w -c rollup.config.js",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "prepublishOnly": "npm run build",
     "debug": "cross-env LOG_LEVEL=debug ts-node src/debug.ts",
     "test": "jest --verbose",
     "watch": "tsc -w"
