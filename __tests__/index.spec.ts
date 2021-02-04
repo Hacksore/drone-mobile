@@ -1,7 +1,6 @@
-import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import DroneMobile from '../';
-import { getSessionToken } from '../util';
-jest.mock('../util');
+import DroneMobile from '../src';
+import { getSessionToken } from '../src/util';
+jest.mock('../src/util');
 
 const getSessionTokenMock = getSessionToken as any;
 
