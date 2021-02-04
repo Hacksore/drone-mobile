@@ -43,6 +43,11 @@ client.on('ready', async () => {
 ### Commands
 
 - [x] Start
+- [x] Stop
 - [x] Lock
 - [x] Unlock
+- [x] Trunk
+- [x] Aux1
+- [x] Aux2
+- [x] Location
 - [x] Status

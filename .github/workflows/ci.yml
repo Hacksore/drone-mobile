@@ -1,9 +1,6 @@
 name: npm
 
-on:
-  push:
-    branches-ignore:
-      - master
+on: push
 
 jobs:
   test:

@@ -9,7 +9,7 @@ import { getSessionToken, apiRequest } from './util';
 interface DroneMobileConfig {
   username: string;
   password: string;
-  pin: string;
+  pin?: string;
 }
 
 // TODO: make this more expanded
@@ -62,7 +62,7 @@ class DroneMobile extends EventEmitter {
   }
 
   /**
-   * Get's the current list of vehicles tied to the account
+   * Gets the current list of vehicles tied to the account
    * @returns Promise
    */
   public async vehicles(): Promise<Array<any>> {
@@ -84,7 +84,7 @@ class DroneMobile extends EventEmitter {
   }
 
   /**
-   * Performs the start command to the vehicle
+   * Sends the start command to the vehicle
    * @param vehicleId Id of the vehicle to target
    */
   public async start(vehicleId: number): Promise<string> {
@@ -105,11 +105,32 @@ class DroneMobile extends EventEmitter {
   }
 
   /**
-   * Performs a lock command to the vehicle
+   * Sends the stop command to the vehicle
+   * @param vehicleId Id of the vehicle to target
+   */
+  public async stop(vehicleId: number): Promise<string> {
+    logger.debug('Stop Vehicle');
+    
+    const response = await apiRequest({
+      path: '/api/iot/send-command',
+      body: { 'deviceKey': vehicleId, 'command': 'remote_stop' },
+      accessToken: this.sessionInfo.accessToken,
+    });
+
+    if (response.statusCode != 200) {
+      logger.debug(response.result);
+      throw 'Something went wrong :(';
+    }
+
+    return 'Stop was successful!';
+  }
+
+  /**
+   * Sends a lock command to the vehicle
    * @param vehicleId Id of the vehicle to target
    */
   public async lock(vehicleId: number): Promise<string> {
-    logger.debug('lock on API');
+    logger.debug('lock Vehicle');
 
     const response = await apiRequest({
       path: '/api/iot/send-command',
@@ -126,11 +147,11 @@ class DroneMobile extends EventEmitter {
   }
 
   /**
-   * Performs an unlock command to the vehicle
+   * Sends an unlock command to the vehicle
    * @param vehicleId Id of the vehicle to target
    */
   public async unlock(vehicleId: number): Promise<string> {
-    logger.debug('unlock on API');
+    logger.debug('unlock Vehicle');
 
     const response = await apiRequest({
       path: '/api/iot/send-command',
@@ -144,6 +165,90 @@ class DroneMobile extends EventEmitter {
     }
 
     return 'Unlock was successful!';
+  }
+
+  /**
+   * Sends an Open Trunk command to the vehicle
+   * @param vehicleId Id of the vehicle to target
+   */
+  public async trunk(vehicleId: number): Promise<string> {
+    logger.debug('Open Vehicle Trunk');
+
+    const response = await apiRequest({
+      path: '/api/iot/send-command',
+      body: { 'deviceKey': vehicleId, 'command': 'trunk' },
+      accessToken: this.sessionInfo.accessToken,
+    });
+
+    if (response.statusCode != 200) {
+      logger.debug(response.result);
+      throw 'Something went wrong :(';
+    }
+
+    return 'Open Trunk command was successful!';
+  }
+
+  /**
+   * Sends a command to the vehicle to toggle the action assigned to aux1
+   * @param vehicleId Id of the vehicle to target
+   */
+  public async aux1(vehicleId: number): Promise<string> {
+    logger.debug('Aux1 action triggered');
+
+    const response = await apiRequest({
+      path: '/api/iot/send-command',
+      body: { 'deviceKey': vehicleId, 'command': 'remote_aux1' },
+      accessToken: this.sessionInfo.accessToken,
+    });
+
+    if (response.statusCode != 200) {
+      logger.debug(response.result);
+      throw 'Something went wrong :(';
+    }
+
+    return 'Aux1 was successful!';
+  }
+
+  /**
+   * Sends a command to the vehicle to toggle the action assigned to aux2
+   * @param vehicleId Id of the vehicle to target
+   */
+  public async aux2(vehicleId: number): Promise<string> {
+    logger.debug('Aux2 action triggered');
+
+    const response = await apiRequest({
+      path: '/api/iot/send-command',
+      body: { 'deviceKey': vehicleId, 'command': 'remote_aux2' },
+      accessToken: this.sessionInfo.accessToken,
+    });
+
+    if (response.statusCode != 200) {
+      logger.debug(response.result);
+      throw 'Something went wrong :(';
+    }
+
+    return 'Aux2 was successful!';
+  }
+
+  /**
+   * Gets the location of the vehicle
+   * @param vehicleId Id of the vehicle to target
+   */
+  public async location(vehicleId: number): Promise<string> {
+    logger.debug('Get Vehicle Location');
+
+    const response = await apiRequest({
+      path: '/api/iot/send-command',
+      body: { 'deviceKey': vehicleId, 'command': 'location' },
+      accessToken: this.sessionInfo.accessToken,
+    });
+
+    if (response.statusCode != 200) {
+      logger.debug(response.result);
+      throw 'Something went wrong :(';
+    }
+
+    return response.result;
   }
 }
 
