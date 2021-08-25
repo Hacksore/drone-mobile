@@ -51,3 +51,4 @@ client.on('ready', async () => {
 - [x] Aux2
 - [x] Location
 - [x] Status
+- [x] Vehicles

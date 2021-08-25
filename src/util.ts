@@ -6,7 +6,7 @@ import {
   AUTH_REGION_ID,
   AUTH_IDENTITY_POOL_ID,
   AUTH_USER_POOL_ID,
-  DRONE_ACCOUNT_BASE_URL
+  DRONE_ACCOUNT_BASE_URL,
 } from './constants';
 
 export const getSessionToken = ({ username, password }): Promise<string> => {
@@ -31,6 +31,8 @@ export const getSessionToken = ({ username, password }): Promise<string> => {
       onSuccess: function (result) {
         AWS.config.region = AUTH_REGION_ID;
 
+        // TODO: type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const credentials: any = new AWS.CognitoIdentityCredentials({
           IdentityPoolId: AUTH_IDENTITY_POOL_ID,
           Logins: {
@@ -39,7 +41,7 @@ export const getSessionToken = ({ username, password }): Promise<string> => {
               .getJwtToken(),
           },
         });
-        
+
         credentials.refresh(error => {
           if (error) {
             return;
@@ -56,8 +58,9 @@ export const getSessionToken = ({ username, password }): Promise<string> => {
   });
 };
 
-export const apiRequest = async ({ path, body, accessToken}) => {
-
+export const apiRequest = async ({ path, body, accessToken }) => {
+  // TODO: type?
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response: any = await got({
     url: `${DRONE_ACCOUNT_BASE_URL}${path}`,
     method: 'POST',
@@ -71,7 +74,6 @@ export const apiRequest = async ({ path, body, accessToken}) => {
 
   return {
     statusCode: response.statusCode,
-    result: response.body
+    result: JSON.parse(response.body),
   };
-
-}
+};

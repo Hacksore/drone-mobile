@@ -12,8 +12,7 @@ describe('DroneMobile', () => {
 
     const client = new DroneMobile({
       username: 'xd',
-      password: 'hunter1',
-      pin: '1234',
+      password: 'hunter1'
     })
 
     client.on('ready', () => {      
