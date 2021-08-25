@@ -8,8 +8,7 @@
     "build": "rollup -c rollup.config.js",
     "dev": "rollup -w -c rollup.config.js",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "prepublishOnly": "npm run build",
-    "debug": "cross-env LOG_LEVEL=debug ts-node src/debug.ts",
+    "debug": "cross-env LOG_LEVEL=debug ts-node debug.ts",
     "test": "jest --verbose",
     "watch": "tsc -w"
   },
@@ -23,16 +22,12 @@
     "url": "^0.11.0",
     "winston": "^3.3.3"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint"
-    }
-  },
   "homepage": "https://github.com/Hacksore/drone-mobile",
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
+    "@rollup/plugin-json": "^4.1.0",
     "@types/got": "^9.6.11",
     "@types/jest": "^25.1.4",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
@@ -40,14 +35,14 @@
     "babel-jest": "^26.6.3",
     "cross-env": "^7.0.3",
     "eslint": "^7.18.0",
-    "husky": "^4.3.8",
+    "inquirer": "^8.1.2",
     "jest": "^26.6.3",
     "rollup": "^2.36.2",
-    "@rollup/plugin-json": "^4.1.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.29.0",
     "ts-jest": "^26.4.4",
+    "ts-node": "^10.2.1",
     "tslib": "^2.1.0",
     "typescript": "^4.1.3"
   }
