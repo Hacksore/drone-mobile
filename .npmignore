@@ -12,3 +12,5 @@ tsconfig.json
 jest.config.js
 .prettierrc
 rollup.config.js
+debug.ts
+__tests__

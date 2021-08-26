@@ -5,11 +5,11 @@ import got from 'got';
 import logger from './logger';
 import { DRONE_BASE_URL } from './constants';
 import { getSessionToken, apiRequest } from './util';
+import { ResultsEntity, VehicleResponse } from './interfaces';
 
 interface DroneMobileConfig {
   username: string;
   password: string;
-  pin?: string;
 }
 
 // TODO: make this more expanded
@@ -21,7 +21,6 @@ class DroneMobile extends EventEmitter {
   private config: DroneMobileConfig = {
     username: '',
     password: '',
-    pin: '1234',
   };
 
   public sessionInfo: SessionInfo = {
@@ -65,12 +64,12 @@ class DroneMobile extends EventEmitter {
    * Gets the current list of vehicles tied to the account
    * @returns Promise
    */
-  public async vehicles(): Promise<Array<any>> {
+  public async vehicles(): Promise<ResultsEntity[]> {
     logger.debug('get vehicles on API');
     const { accessToken } = this.sessionInfo;
 
     // TODO: type this
-    const response: any = await got({
+    const response: VehicleResponse = await got({
       url: `${DRONE_BASE_URL}/api/v1/vehicle?limit=100`,
       throwHttpErrors: false,
       headers: {
@@ -87,9 +86,9 @@ class DroneMobile extends EventEmitter {
    * Sends the start command to the vehicle
    * @param vehicleId Id of the vehicle to target
    */
-  public async start(vehicleId: number): Promise<string> {
+  public async start(vehicleId: string): Promise<string> {
     logger.debug('Start Vehicle');
-    
+
     const response = await apiRequest({
       path: '/api/iot/send-command',
       body: { 'deviceKey': vehicleId, 'command': 'remote_start' },
@@ -108,9 +107,9 @@ class DroneMobile extends EventEmitter {
    * Sends the stop command to the vehicle
    * @param vehicleId Id of the vehicle to target
    */
-  public async stop(vehicleId: number): Promise<string> {
+  public async stop(vehicleId: string): Promise<string> {
     logger.debug('Stop Vehicle');
-    
+
     const response = await apiRequest({
       path: '/api/iot/send-command',
       body: { 'deviceKey': vehicleId, 'command': 'remote_stop' },
@@ -129,7 +128,7 @@ class DroneMobile extends EventEmitter {
    * Sends a lock command to the vehicle
    * @param vehicleId Id of the vehicle to target
    */
-  public async lock(vehicleId: number): Promise<string> {
+  public async lock(vehicleId: string): Promise<string> {
     logger.debug('lock Vehicle');
 
     const response = await apiRequest({
@@ -150,7 +149,7 @@ class DroneMobile extends EventEmitter {
    * Sends an unlock command to the vehicle
    * @param vehicleId Id of the vehicle to target
    */
-  public async unlock(vehicleId: number): Promise<string> {
+  public async unlock(vehicleId: string): Promise<string> {
     logger.debug('unlock Vehicle');
 
     const response = await apiRequest({
@@ -171,7 +170,7 @@ class DroneMobile extends EventEmitter {
    * Sends an Open Trunk command to the vehicle
    * @param vehicleId Id of the vehicle to target
    */
-  public async trunk(vehicleId: number): Promise<string> {
+  public async trunk(vehicleId: string): Promise<string> {
     logger.debug('Open Vehicle Trunk');
 
     const response = await apiRequest({
@@ -192,7 +191,7 @@ class DroneMobile extends EventEmitter {
    * Sends a command to the vehicle to toggle the action assigned to aux1
    * @param vehicleId Id of the vehicle to target
    */
-  public async aux1(vehicleId: number): Promise<string> {
+  public async aux1(vehicleId: string): Promise<string> {
     logger.debug('Aux1 action triggered');
 
     const response = await apiRequest({
@@ -213,7 +212,7 @@ class DroneMobile extends EventEmitter {
    * Sends a command to the vehicle to toggle the action assigned to aux2
    * @param vehicleId Id of the vehicle to target
    */
-  public async aux2(vehicleId: number): Promise<string> {
+  public async aux2(vehicleId: string): Promise<string> {
     logger.debug('Aux2 action triggered');
 
     const response = await apiRequest({
@@ -234,7 +233,9 @@ class DroneMobile extends EventEmitter {
    * Gets the location of the vehicle
    * @param vehicleId Id of the vehicle to target
    */
-  public async location(vehicleId: number): Promise<string> {
+  // TODO: type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async location(vehicleId: string): Promise<any> {
     logger.debug('Get Vehicle Location');
 
     const response = await apiRequest({
@@ -244,11 +245,22 @@ class DroneMobile extends EventEmitter {
     });
 
     if (response.statusCode != 200) {
-      logger.debug(response.result);
+      logger.debug(response);
       throw 'Something went wrong :(';
     }
 
     return response.result;
+  }
+
+  /**
+   * Gets the status of the vehicle
+   * @param vehicleId Id of the vehicle to target
+   */
+  public async status(vehicleId: string): Promise<ResultsEntity | undefined | null> {
+    logger.debug('Get Vehicle Status');
+
+    const vehicles = await this.vehicles();
+    return vehicles?.find(item => item.device_key === vehicleId);
   }
 }
 
