@@ -92,10 +92,6 @@ class DroneMobile extends EventEmitter {
 
     const { all = true, limit = 100, offset = 0 } = opts ?? {};
 
-    const vehicles: ResultsEntity[] = [];
-
-    // TODO: after initial request, send the rest of the requests in parallel
-
     const sendReq = async (limit: number, offset: number) => {
       return (await got({
         url: `${DRONE_BASE_URL}/api/v1/vehicle?limit=${limit}&offset=${offset}`,
@@ -106,6 +102,7 @@ class DroneMobile extends EventEmitter {
       }).json()) as VehicleResponse;
     };
 
+    const vehicles: ResultsEntity[] = [];
     const response = await sendReq(limit, offset);
     vehicles.push(...response.results);
 
