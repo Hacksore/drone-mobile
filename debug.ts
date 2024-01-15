@@ -1,10 +1,10 @@
 import config from './config.json';
-import DroneMoble from './src';
+import DroneMobile from './src';
 import inquirer from 'inquirer';
 
 const { username, password } = config;
 
-let client: DroneMoble;
+let client: DroneMobile;
 let vehicleId;
 
 const apiCalls = {
@@ -69,12 +69,11 @@ const onReadyHandler = async () => {
   // get a list of vehicles on the account
   const vehicleList = await client.vehicles();
   vehicleId = vehicleList[0]?.device_key;
-  
   askForCommandInput();
 };
 
 const createInstance = () => {
-  client = new DroneMoble({
+  client = new DroneMobile({
     username,
     password,
   });
