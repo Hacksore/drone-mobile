@@ -17,6 +17,27 @@ interface SessionInfo {
   accessToken: string | null;
 }
 
+type VehicleOptions =
+  | {
+      /**
+       * Whether to recursively request all vehicles (default: true).
+       */
+      all: true;
+      /**
+       * The maximum number of vehicles to return (default: 100, max: 100).
+       */
+      limit?: never;
+      /**
+       * The number of vehicles to skip (default: 0).
+       */
+      offset?: never;
+    }
+  | {
+      all?: false;
+      limit?: number;
+      offset?: number;
+    };
+
 class DroneMobile extends EventEmitter {
   private config: DroneMobileConfig = {
     username: '',
@@ -62,24 +83,41 @@ class DroneMobile extends EventEmitter {
 
   /**
    * Gets the current list of vehicles tied to the account
+   * @param
    * @returns Promise
    */
-  public async vehicles(): Promise<ResultsEntity[]> {
+  public async vehicles(opts?: VehicleOptions): Promise<ResultsEntity[]> {
     logger.debug('get vehicles on API');
     const { accessToken } = this.sessionInfo;
 
-    // TODO: type this
-    const response: VehicleResponse = await got({
-      url: `${DRONE_BASE_URL}/api/v1/vehicle?limit=100`,
-      throwHttpErrors: false,
-      headers: {
-        'authorization': `Bearer ${accessToken}`,
-      },
-    }).json();
+    const { all = true, limit = 100, offset = 0 } = opts ?? {};
 
-    logger.debug(response.results);
+    const sendReq = async (limit: number, offset: number) => {
+      return (await got({
+        url: `${DRONE_BASE_URL}/api/v1/vehicle?limit=${limit}&offset=${offset}`,
+        throwHttpErrors: false,
+        headers: {
+          'authorization': `Bearer ${accessToken}`,
+        },
+      }).json()) as VehicleResponse;
+    };
 
-    return response.results;
+    const vehicles: ResultsEntity[] = [];
+    const response = await sendReq(limit, offset);
+    vehicles.push(...response.results);
+
+    if (all) {
+      const numOfRequests = Math.ceil(response.count / limit) - 1;
+      const requests = Array.from({ length: numOfRequests }, (_, i) => {
+        return sendReq(limit, (i + 1) * limit);
+      });
+      const results = await Promise.all(requests);
+      results.forEach(result => {
+        vehicles.push(...result.results);
+      });
+    }
+
+    return vehicles;
   }
 
   /**
@@ -259,7 +297,7 @@ class DroneMobile extends EventEmitter {
   public async status(vehicleId: string): Promise<ResultsEntity | undefined | null> {
     logger.debug('Get Vehicle Status');
 
-    const vehicles = await this.vehicles();
+    const vehicles = await this.vehicles({ all: true });
     return vehicles?.find(item => item.device_key === vehicleId);
   }
 }
