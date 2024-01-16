@@ -1,7 +1,7 @@
 export interface VehicleResponse {
   count: number;
-  next?: null;
-  previous?: null;
+  next?: null | string;
+  previous?: null | string;
   results: ResultsEntity[];
 }
 
@@ -47,7 +47,7 @@ export interface ResultsEntity {
   new_pending_owner?: null;
   in_geofence: boolean;
   dealer_profile?: null;
-  current_geofences?: (null)[] | null;
+  current_geofences?: null[] | null;
 }
 
 export interface LastKnownState {
