@@ -2,8 +2,6 @@ import config from './config.json';
 import DroneMobile from './src';
 import inquirer from 'inquirer';
 
-const { username, password } = config;
-
 let client: DroneMobile;
 let vehicleId;
 
@@ -63,6 +61,15 @@ const apiCalls = {
       console.log('location:', JSON.stringify(location, null, 2));
     },
   },
+
+  failLogin: {
+    run: async () => {
+      createInstance({
+        username: 'bad@fail.now',
+        password: "I 'm a disappointment",
+      });
+    },
+  },
 };
 
 const onReadyHandler = async () => {
@@ -72,12 +79,12 @@ const onReadyHandler = async () => {
   askForCommandInput();
 };
 
-const createInstance = () => {
-  client = new DroneMobile({
-    username,
-    password,
-  });
+const createInstance = config => {
+  client = new DroneMobile(config);
   client.on('ready', onReadyHandler);
+  client.on('error', err => {
+    console.error(err?.message ?? err);
+  });
 };
 
 function askForCommandInput() {
@@ -100,4 +107,4 @@ function askForCommandInput() {
     });
 }
 
-createInstance();
+createInstance(config);

@@ -58,9 +58,12 @@ class DroneMobile extends EventEmitter {
 
   private async onInit(): Promise<string> {
     logger.debug('Calling onInit');
-    await this.login();
-    this.emit('ready');
-
+    try {
+      await this.login();
+      this.emit('ready');
+    } catch (error) {
+      this.emit('error', error);
+    }
     return 'done';
   }
 
