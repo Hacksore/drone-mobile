@@ -1,10 +1,11 @@
 name: Release
 
 on:
+  # Allow manual
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # use publish even so when goes from draft -> released
+  release:
+    types: [published]
 
 jobs:
   publish:
