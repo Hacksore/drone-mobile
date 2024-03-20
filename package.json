@@ -1,7 +1,7 @@
 {
   "name": "drone-mobile",
   "version": "0.0.7",
-  "description": "",
+  "description": "A drone mobile api wrapper",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
